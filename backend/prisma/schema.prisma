@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  JOB_SEEKER
+  COMPANY
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum ApplicationStatus {
+  APPLIED
+  REVIEWING
+  SHORTLISTED
+  REJECTED
+  ACCEPTED
+}
+
+// Company = User dengan role COMPANY (name = nama perusahaan)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role
+  createdAt DateTime @default(now())
+
+  jobs         Job[]
+  applications Application[]
+  changes      ApplicationHistory[]
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  location    String
+  salaryMin   Int?
+  salaryMax   Int?
+  type        JobType
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  companyId    String
+  company      User          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  applications Application[]
+
+  @@index([companyId])
+  @@index([createdAt])
+}
+
+model Application {
+  id          String            @id @default(uuid())
+  status      ApplicationStatus @default(APPLIED)
+  coverLetter String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  jobId    String
+  seekerId String
+  job      Job                  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  seeker   User                 @relation(fields: [seekerId], references: [id], onDelete: Cascade)
+  history  ApplicationHistory[]
+
+  // Mencegah apply ke job yang sama lebih dari sekali (dijamin di level DB)
+  @@unique([jobId, seekerId])
+  @@index([seekerId])
+}
+
+model ApplicationHistory {
+  id         String             @id @default(uuid())
+  fromStatus ApplicationStatus?
+  toStatus   ApplicationStatus
+  note       String?
+  createdAt  DateTime           @default(now())
+
+  applicationId String
+  changedById   String
+  application   Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  changedBy     User        @relation(fields: [changedById], references: [id])
+
+  @@index([applicationId])
+}
