@@ -1,66 +1,779 @@
+/* ============================================================
+   INDOKERJA MINI — Design System
+   Flat, modern, professional. No gradients. Solid colors only.
+   ============================================================ */
+
+/* ── 1. CSS Custom Properties (Design Tokens) ──────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 :root {
-  --ink: #17212b; --muted: #5d6b79; --paper: #f4f6f8; --card: #fff; --line: #dde3e9;
-  --brand: #0f5c4d; --brand-ink: #fff; --danger: #b42318; --radius: 10px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  color: var(--ink); background: var(--paper); line-height: 1.55;
+  /* Palette */
+  --brand:        #1a6fdb;   /* primary blue */
+  --brand-hover:  #1559b7;
+  --brand-light:  #e8f1fc;
+  --brand-ink:    #ffffff;
+
+  --ink:          #1a2332;   /* near-black text */
+  --ink-2:        #374455;   /* secondary text */
+  --muted:        #64748b;   /* muted/caption text */
+  --paper:        #f4f6f9;   /* page background */
+  --card:         #ffffff;   /* card surface */
+  --line:         #dde3ec;   /* borders/dividers */
+  --line-strong:  #c4cdd8;
+
+  /* Semantic */
+  --danger:       #c0392b;
+  --danger-bg:    #fdf2f2;
+  --danger-line:  #f5c6c3;
+  --success:      #1a7a4a;
+  --success-bg:   #edf8f2;
+  --success-line: #a8dfc0;
+  --warn:         #9a6c00;
+  --warn-bg:      #fefae8;
+  --warn-line:    #f0d97a;
+
+  /* Status badge colors — solid, distinct */
+  --s-applied:        #2563eb;   /* blue */
+  --s-applied-bg:     #eff6ff;
+  --s-reviewing:      #9333ea;   /* purple */
+  --s-reviewing-bg:   #faf5ff;
+  --s-shortlisted:    #0891b2;   /* teal */
+  --s-shortlisted-bg: #ecfeff;
+  --s-rejected:       #dc2626;   /* red */
+  --s-rejected-bg:    #fff5f5;
+  --s-accepted:       #16a34a;   /* green */
+  --s-accepted-bg:    #f0fdf4;
+
+  /* Spacing scale */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* Shadows — no gradient, no color shift */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md:  0 4px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  /* Typography */
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-size-xs:  0.75rem;    /* 12px */
+  --font-size-sm:  0.875rem;   /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg:  1.125rem;   /* 18px */
+  --font-size-xl:  1.375rem;   /* 22px */
+  --font-size-2xl: 1.75rem;    /* 28px */
+
+  /* Transitions */
+  --transition: 150ms ease;
+
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--paper);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
-* { box-sizing: border-box; }
+
+/* ── 2. Reset & Base ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 body { margin: 0; }
-h1 { font-size: 1.7rem; margin: 1rem 0; letter-spacing: -0.01em; }
-h3 { margin: 0 0 .15rem; font-size: 1.05rem; }
+
+h1, h2, h3, h4 { margin: 0; line-height: 1.25; letter-spacing: -0.015em; color: var(--ink); }
+h1 { font-size: var(--font-size-2xl); font-weight: 700; }
+h2 { font-size: var(--font-size-xl); font-weight: 700; }
+h3 { font-size: var(--font-size-base); font-weight: 600; }
+
+p { margin: 0; }
 a { color: var(--brand); }
-.container { max-width: 1040px; margin: 0 auto; padding: 0 1rem 3rem; }
-.muted { color: var(--muted); margin: .15rem 0; }
-.small { font-size: .85rem; }
-.prewrap { white-space: pre-wrap; }
+a:hover { color: var(--brand-hover); }
 
-.topbar { background: var(--card); border-bottom: 1px solid var(--line); margin-bottom: 1rem; }
-.topbar-inner { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.5rem; padding-top: .75rem; padding-bottom: .75rem; }
-.brand { color: var(--brand); font-size: 1.1rem; }
-.topbar nav { display: flex; gap: 1rem; flex: 1; }
-.topbar nav a { color: var(--muted); text-decoration: none; padding: .25rem 0; border-bottom: 2px solid transparent; }
-.topbar nav a.active { color: var(--ink); border-color: var(--brand); }
-.user { display: flex; align-items: center; gap: .75rem; }
+/* ── 3. Focus Styles (accessible) ──────────────────────────── */
+:focus-visible {
+  outline: 2.5px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
 
-.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem 1.15rem; }
-.detail, .narrow { max-width: 720px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1rem; }
-.stack { display: grid; gap: .75rem; }
-.job-card { text-decoration: none; color: inherit; display: block; }
-.job-card:hover, .job-card:focus-visible { border-color: var(--brand); }
-.company { font-weight: 600; margin: 0; }
-.salary { font-weight: 600; margin: .5rem 0; }
-.row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
-.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.filters { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: .75rem; margin-bottom: 1rem; }
-.pager { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.5rem; }
-.status-edit { display: flex; align-items: center; gap: .5rem; }
+/* ── 4. Layout ──────────────────────────────────────────────── */
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-inline: var(--sp-6);
+  padding-bottom: var(--sp-12);
+}
 
-label { display: block; font-weight: 600; font-size: .9rem; margin-bottom: .85rem; }
-input, select, textarea { display: block; width: 100%; margin-top: .3rem; padding: .6rem .7rem; font: inherit; font-weight: 400; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); }
-input:focus-visible, select:focus-visible, textarea:focus-visible, .btn:focus-visible, a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-.status-edit select { margin: 0; width: auto; }
+.detail  { max-width: 740px; }
+.narrow  { max-width: 580px; }
+.stack   { display: grid; gap: var(--sp-4); }
+.row     { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-4); flex-wrap: wrap; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
 
-.btn { display: inline-block; background: var(--brand); color: var(--brand-ink); border: 1px solid var(--brand); padding: .6rem 1.1rem; border-radius: 8px; font: inherit; font-weight: 600; cursor: pointer; text-decoration: none; }
-.btn:disabled { opacity: .55; cursor: not-allowed; }
-.btn-ghost { background: transparent; color: var(--brand); }
-.alert { background: #fdecea; color: var(--danger); border: 1px solid #f5c2bd; padding: .6rem .8rem; border-radius: 8px; margin-bottom: 1rem; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--sp-5);
+}
 
-.badge { display: inline-block; padding: .15rem .6rem; border-radius: 999px; font-size: .8rem; font-weight: 600; background: #e8edf2; color: #33414f; }
-.badge-reviewing { background: #fff3cd; color: #7a5a00; }
-.badge-shortlisted { background: #dbeafe; color: #1e4fa3; }
-.badge-accepted { background: #d6f2e3; color: #0b6b3a; }
-.badge-rejected { background: #fde2e0; color: #a1261b; }
+/* ── 5. Top Bar ─────────────────────────────────────────────── */
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-xs);
+}
 
-details { margin-top: .75rem; }
-summary { cursor: pointer; color: var(--brand); font-weight: 600; }
-.timeline { margin: .5rem 0 0; padding-left: 1.2rem; }
+.topbar-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-6);
+  padding-block: var(--sp-3);
+  padding-inline: var(--sp-6);
+  max-width: 1080px;
+  margin: 0 auto;
+}
 
-.auth-wrap { min-height: 100vh; display: grid; place-items: center; padding: 1rem; }
-.auth-card { width: 100%; max-width: 400px; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--brand);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.brand-dot { color: var(--ink); }
 
-@media (max-width: 640px) {
-  .filters, .two-col { grid-template-columns: 1fr; }
-  .topbar nav { order: 3; flex-basis: 100%; }
-  .user { margin-left: auto; }
+.topbar nav {
+  display: flex;
+  gap: var(--sp-2);
+  flex: 1;
+  align-items: center;
+}
+.topbar nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+}
+.topbar nav a:hover { color: var(--ink); background: var(--paper); }
+.topbar nav a.active {
+  color: var(--brand);
+  background: var(--brand-light);
+  font-weight: 600;
+}
+
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.topbar-user-name {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+}
+
+main.container { padding-top: var(--sp-8); }
+
+/* ── 6. Page heading row ────────────────────────────────────── */
+.page-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-6);
+}
+.page-heading h1 { margin: 0; }
+
+/* ── 7. Cards ───────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-5) var(--sp-6);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Job card (clickable) */
+.job-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  cursor: pointer;
+}
+.job-card:hover,
+.job-card:focus-visible {
+  border-color: var(--brand);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.job-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+
+.job-card-company {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: var(--sp-1);
+}
+.job-card-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
+  color: var(--muted);
+  margin-bottom: var(--sp-3);
+}
+.job-card-meta-dot { color: var(--line-strong); }
+.job-card-salary {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ── 8. Filters / Search bar ────────────────────────────────── */
+.filters-bar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-6);
+  align-items: center;
+}
+.filters-loading {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--font-size-sm);
+  color: var(--muted);
+  min-height: 1.5rem;
+}
+
+/* ── 9. Pager ───────────────────────────────────────────────── */
+.pager {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-4);
+  margin-top: var(--sp-8);
+}
+.pager-info {
+  font-size: var(--font-size-sm);
+  color: var(--muted);
+}
+
+/* ── 10. Buttons ────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  background: var(--brand);
+  color: var(--brand-ink);
+  border: 1.5px solid var(--brand);
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  font: 600 var(--font-size-sm) / 1.5 var(--font);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition), border-color var(--transition), opacity var(--transition);
+  white-space: nowrap;
+  user-select: none;
+}
+.btn:hover:not(:disabled) { background: var(--brand-hover); border-color: var(--brand-hover); }
+
+.btn-sm { padding: 0.3rem 0.75rem; font-size: var(--font-size-xs); }
+
+.btn-secondary {
+  background: var(--card);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--brand-light);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--brand);
+  border-color: transparent;
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--brand-light);
+  border-color: var(--brand-light);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  border-color: var(--danger);
+}
+.btn-danger:hover:not(:disabled) { background: #a93225; border-color: #a93225; }
+
+.btn-logout {
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--line);
+  font-size: var(--font-size-xs);
+  padding: 0.3rem 0.75rem;
+}
+.btn-logout:hover:not(:disabled) {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: var(--danger-bg);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── 11. Form Fields ────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: var(--sp-1); margin-bottom: var(--sp-5); }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--ink-2);
+  margin-bottom: var(--sp-4);   /* legacy label margin */
+}
+
+/* New field labels without legacy margin */
+.field > label { margin-bottom: 0; }
+
+input, select, textarea {
+  display: block;
+  width: 100%;
+  margin-top: var(--sp-1);
+  padding: 0.6rem 0.8rem;
+  font: var(--font-size-sm) / 1.5 var(--font);
+  font-weight: 400;
+  color: var(--ink);
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(26, 111, 219, 0.12);
+  outline: none;
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2.2rem; }
+
+/* Status-change select (compact, inside card) */
+.status-select { margin: 0; width: auto; font-size: var(--font-size-sm); padding: 0.35rem 2rem 0.35rem 0.6rem; }
+
+/* ── 12. Status Badges ──────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.badge-applied     { background: var(--s-applied-bg);     color: var(--s-applied); }
+.badge-reviewing   { background: var(--s-reviewing-bg);   color: var(--s-reviewing); }
+.badge-shortlisted { background: var(--s-shortlisted-bg); color: var(--s-shortlisted); }
+.badge-rejected    { background: var(--s-rejected-bg);    color: var(--s-rejected); }
+.badge-accepted    { background: var(--s-accepted-bg);    color: var(--s-accepted); }
+
+/* Type badge (job type pill) */
+.type-badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  background: var(--paper);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+}
+
+/* ── 13. Alert / Error Box ──────────────────────────────────── */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-line);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-bottom: var(--sp-4);
+}
+.alert-icon { flex-shrink: 0; margin-top: 1px; }
+
+.alert-success {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success-line);
+}
+
+/* ── 14. Skeleton / Loading placeholders ────────────────────── */
+.skeleton {
+  background: var(--line);
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+@keyframes sk-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+.skeleton { animation: sk-pulse 1.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}
+
+.skeleton-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--sp-5) var(--sp-6);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── 15. Spinner ────────────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2s; }
+}
+
+/* ── 16. Toast / Success Feedback ───────────────────────────── */
+.toast-wrap {
+  position: fixed;
+  bottom: var(--sp-6);
+  right: var(--sp-6);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  pointer-events: none;
+}
+.toast {
+  background: var(--ink);
+  color: #fff;
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: toast-in 0.25s ease forwards, toast-out 0.3s ease 2.5s forwards;
+}
+.toast-success { background: var(--success); }
+
+@keyframes toast-in  { to { opacity: 1; transform: translateY(0); } }
+@keyframes toast-out { to { opacity: 0; transform: translateY(8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; opacity: 1; transform: none; }
+}
+
+/* ── 17. Auth page ──────────────────────────────────────────── */
+.auth-wrap {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-6);
+  background: var(--paper);
+}
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+}
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--brand);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--sp-6);
+}
+.auth-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--sp-1);
+}
+.auth-subtitle {
+  font-size: var(--font-size-sm);
+  color: var(--muted);
+  margin-bottom: var(--sp-6);
+}
+
+.demo-hint {
+  background: var(--warn-bg);
+  border: 1px solid var(--warn-line);
+  color: var(--warn);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--font-size-xs);
+  margin-top: var(--sp-5);
+}
+.demo-hint strong { display: block; margin-bottom: var(--sp-1); }
+
+/* ── 18. Job Detail ─────────────────────────────────────────── */
+.detail-header {
+  margin-bottom: var(--sp-6);
+}
+.detail-title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin-bottom: var(--sp-2);
+}
+.detail-company {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--ink-2);
+  margin-bottom: var(--sp-2);
+}
+.detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--muted);
+  margin-bottom: var(--sp-3);
+}
+.detail-salary {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--brand);
+  margin-top: var(--sp-3);
+}
+.detail-section-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-3);
+  margin-top: var(--sp-6);
+}
+
+.applied-state {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-4) var(--sp-5);
+  margin-top: var(--sp-6);
+  font-size: var(--font-size-sm);
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+/* ── 19. Applications list ──────────────────────────────────── */
+.app-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+.app-card-job { font-size: var(--font-size-base); font-weight: 600; }
+.app-card-meta { font-size: var(--font-size-sm); color: var(--muted); margin-top: var(--sp-1); }
+
+/* ── 20. Status change row (Company Applicants) ─────────────── */
+.status-edit {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* ── 21. Timeline / History ─────────────────────────────────── */
+details { margin-top: var(--sp-5); }
+summary {
+  cursor: pointer;
+  color: var(--brand);
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+summary::-webkit-details-marker { display: none; }
+summary::before {
+  content: '';
+  display: inline-block;
+  border: 5px solid transparent;
+  border-left: 7px solid var(--brand);
+  transition: transform var(--transition);
+}
+details[open] summary::before { transform: rotate(90deg); }
+
+.timeline {
+  list-style: none;
+  margin: var(--sp-4) 0 0;
+  padding: 0;
+  border-left: 2px solid var(--line);
+  padding-left: var(--sp-5);
+  display: grid;
+  gap: var(--sp-3);
+}
+.timeline li {
+  position: relative;
+}
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--sp-5) - 1px);
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px var(--brand);
+}
+.timeline-status { font-weight: 600; font-size: var(--font-size-sm); color: var(--ink); }
+.timeline-meta   { font-size: var(--font-size-xs); color: var(--muted); margin-top: var(--sp-1); }
+
+/* ── 22. Company Applicant card ─────────────────────────────── */
+.applicant-name  { font-size: var(--font-size-base); font-weight: 600; }
+.applicant-email { font-size: var(--font-size-sm); color: var(--muted); }
+.cover-letter-label {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--sp-2);
+  margin-top: var(--sp-5);
+}
+.prewrap { white-space: pre-wrap; font-size: var(--font-size-sm); color: var(--ink-2); line-height: 1.65; }
+
+/* ── 23. Back link ──────────────────────────────────────────── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  margin-bottom: var(--sp-5);
+  transition: color var(--transition);
+}
+.back-link:hover { color: var(--brand); }
+
+/* ── 24. Empty States ───────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: var(--sp-12) var(--sp-6);
+  color: var(--muted);
+}
+.empty-state-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--sp-4);
+  opacity: 0.5;
+}
+.empty-state h3 { font-size: var(--font-size-lg); color: var(--ink-2); margin-bottom: var(--sp-2); }
+.empty-state p  { font-size: var(--font-size-sm); margin-bottom: var(--sp-6); }
+
+/* ── 25. Utility helpers ────────────────────────────────────── */
+.muted  { color: var(--muted); }
+.small  { font-size: var(--font-size-sm); }
+.mt-4   { margin-top: var(--sp-4); }
+.mt-6   { margin-top: var(--sp-6); }
+.mb-4   { margin-bottom: var(--sp-4); }
+.mb-6   { margin-bottom: var(--sp-6); }
+.flex   { display: flex; align-items: center; gap: var(--sp-3); }
+.gap-2  { gap: var(--sp-2); }
+
+/* ── 26. Divider ────────────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: var(--sp-6) 0;
+}
+
+/* ── 27. Responsive ─────────────────────────────────────────── */
+@media (max-width: 700px) {
+  :root { font-size: 15px; }
+  .container { padding-inline: var(--sp-4); }
+  .topbar-inner { padding-inline: var(--sp-4); gap: var(--sp-2) var(--sp-4); }
+  .filters-bar  { grid-template-columns: 1fr; }
+  .two-col      { grid-template-columns: 1fr; }
+  .grid         { grid-template-columns: 1fr; }
+  .topbar nav   { order: 3; flex-basis: 100%; }
+  .topbar-user  { margin-left: auto; }
+  h1            { font-size: var(--font-size-xl); }
+  .toast-wrap   { right: var(--sp-4); bottom: var(--sp-4); left: var(--sp-4); }
+  .toast        { text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .card { padding: var(--sp-4); }
+}
+
+/* ── 28. prefers-reduced-motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .job-card { transition: none; }
+  .btn      { transition: none; }
+  details summary::before { transition: none; }
+  .toast    { animation: none; opacity: 1; }
 }
