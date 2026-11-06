@@ -3,8 +3,9 @@ import { useAuth } from '../auth';
 import { Role } from '../types';
 
 export function Layout() {
-  const { user, logout } = useAuth();
-  if (!user) return null;
+  const { user, loading, logout } = useAuth();
+  if (loading) return <p className="container muted">Memuat…</p>;
+  if (!user) return <Navigate to="/login" replace />;
   const links =
     user.role === 'JOB_SEEKER'
       ? [{ to: '/jobs', label: 'Lowongan' }, { to: '/applications', label: 'Lamaran saya' }]

@@ -1,12 +1,12 @@
 import { FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { errorText } from '../api';
 import { useAuth } from '../auth';
 import { ErrorBox } from '../components/ui';
 import { Role } from '../types';
 
 export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
-  const { login, register } = useAuth();
+  const { user, login, register } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ name: '', email: '', password: '', role: 'JOB_SEEKER' as Role });
   const [error, setError] = useState('');
@@ -29,6 +29,9 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
       setLoading(false);
     }
   }
+
+  // Sudah login: jangan tampilkan form lagi (mis. saat tombol Back ditekan)
+  if (user) return <Navigate to={user.role === 'COMPANY' ? '/company/jobs' : '/jobs'} replace />;
 
   return (
     <div className="auth-wrap">

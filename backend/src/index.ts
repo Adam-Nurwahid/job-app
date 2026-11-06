@@ -21,4 +21,9 @@ app.use('/api/applications', applicationRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(config.port, () => console.log(`API berjalan di http://localhost:${config.port}`));
+// Di Vercel app dijalankan sebagai serverless function (lihat api/index.ts), jadi tidak perlu listen.
+if (!process.env.VERCEL) {
+  app.listen(config.port, () => console.log(`API berjalan di http://localhost:${config.port}`));
+}
+
+export default app;
